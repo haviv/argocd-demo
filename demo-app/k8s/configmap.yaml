@@ -117,7 +117,7 @@ data:
     <body>
         <div class="container">
             <div class="emoji">🚀</div>
-            <h1>ArgoCD Demo</h1>
+            <h1>111 ArgoCD Demo</h1>
             <div class="greeting">GREETING_PLACEHOLDER</div>
             <div class="version">Version: VERSION_PLACEHOLDER</div>
             <div class="info">
