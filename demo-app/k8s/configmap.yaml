@@ -5,7 +5,7 @@ metadata:
   namespace: default
 data:
   # Edit this message and watch ArgoCD sync it!
-  greeting: "--Hello from ArgoCD! 🚀"
+  greeting: "xxHello from ArgoCD! 🚀"
   version: "v1.0"
   index.html: |
     <!DOCTYPE html>
