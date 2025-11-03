@@ -1,0 +1,30 @@
+# Default values - used if not overridden
+replicaCount: 2
+
+image:
+  repository: nginx
+  tag: "1.25-alpine"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "100m"
+  limits:
+    memory: "128Mi"
+    cpu: "200m"
+
+env:
+  ENVIRONMENT: "development"
+  TENANT_NAME: "default"
+  LOG_LEVEL: "info"
+
+service:
+  type: ClusterIP
+  port: 80
+
+# Tenant-specific configuration
+tenant:
+  name: "default"
+  namespace: "default"
+

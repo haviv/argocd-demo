@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: tenant-a
+
+# Reference the base
+bases:
+  - ../../base
+
+# Add a prefix to all resources
+namePrefix: tenant-a-
+
+# Add common labels
+commonLabels:
+  tenant: tenant-a
+
+# Override replicas
+replicas:
+  - name: myapp
+    count: 3
+
+# Patch environment variables
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/value
+        value: "production"
+      - op: replace
+        path: /spec/template/spec/containers/0/env/1/value
+        value: "tenant-a"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests/memory
+        value: "128Mi"
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "256Mi"
+    target:
+      kind: Deployment
+      name: myapp
+

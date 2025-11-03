@@ -1,0 +1,22 @@
+# Tenant B specific values
+replicaCount: 5
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "500m"
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+
+env:
+  ENVIRONMENT: "production"
+  TENANT_NAME: "tenant-b"
+  LOG_LEVEL: "error"
+  DATABASE_URL: "postgres://tenant-b-db:5432"
+  CACHE_SIZE: "1024"
+
+tenant:
+  name: "tenant-b"
+  namespace: "tenant-b"
+

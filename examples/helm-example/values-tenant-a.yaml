@@ -1,0 +1,21 @@
+# Tenant A specific values
+replicaCount: 3
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "200m"
+  limits:
+    memory: "256Mi"
+    cpu: "400m"
+
+env:
+  ENVIRONMENT: "production"
+  TENANT_NAME: "tenant-a"
+  LOG_LEVEL: "warn"
+  DATABASE_URL: "postgres://tenant-a-db:5432"
+
+tenant:
+  name: "tenant-a"
+  namespace: "tenant-a"
+

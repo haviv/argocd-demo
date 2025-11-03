@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: auto-discover-tenants
+  namespace: argocd
+spec:
+  # This automatically discovers ALL values-*.yaml files in Git!
+  generators:
+  - git:
+      repoURL: https://github.com/haviv/argocd-demo
+      revision: HEAD
+      files:
+      - path: "examples/helm-example/values-*.yaml"
+  
+  template:
+    metadata:
+      # Extract tenant name from filename
+      # values-customer-acme.yaml → customer-acme-app
+      name: '{{path.basename}}-app'
+    spec:
+      project: default
+      
+      source:
+        repoURL: https://github.com/haviv/argocd-demo
+        path: examples/helm-example
+        targetRevision: HEAD
+        helm:
+          valueFiles:
+          - '{{path.filename}}'  # The discovered values file
+      
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path[1]}}'  # Extract from path
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
+---
+# MAGIC! 🪄
+# Add values-new-customer.yaml to Git
+# → ArgoCD automatically creates new-customer-app
+# → Deploys automatically!
+#
+# No manual 'argocd app create' needed!
+

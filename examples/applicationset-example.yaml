@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: all-tenants
+  namespace: argocd
+spec:
+  # This defines HOW to generate Applications
+  generators:
+  
+  # Option 1: List all tenants here (simple, explicit)
+  - list:
+      elements:
+      # ← Add your 20 customers here!
+      - tenant: customer-1
+        replicas: "3"
+        
+      - tenant: customer-2
+        replicas: "5"
+        
+      - tenant: customer-3
+        replicas: "2"
+        
+      - tenant: customer-acme
+        replicas: "10"
+        
+      # ... add remaining 16 customers
+      
+  # Option 2: Auto-discover from Git directories (advanced)
+  # - git:
+  #     repoURL: https://github.com/haviv/argocd-demo
+  #     revision: HEAD
+  #     directories:
+  #     - path: examples/helm-example/values-*.yaml
+
+  # This template generates ONE Application per tenant
+  template:
+    metadata:
+      name: '{{tenant}}-app'
+    spec:
+      project: default
+      
+      source:
+        repoURL: https://github.com/haviv/argocd-demo
+        path: examples/helm-example
+        targetRevision: HEAD
+        helm:
+          valueFiles:
+          - 'values-{{tenant}}.yaml'
+      
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{tenant}}'
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
+---
+# Result: ArgoCD automatically creates:
+# - customer-1-app
+# - customer-2-app  
+# - customer-3-app
+# - customer-acme-app
+# ... all 20+ Applications!
+
